@@ -1,0 +1,7 @@
+name: BukkitPlace
+version: 1.0
+author: NullChips
+main: me.nullchips.bukkitplace.BukkitPlace
+load: POSTWORLD
+
+commands:
