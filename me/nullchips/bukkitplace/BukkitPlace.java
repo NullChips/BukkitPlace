@@ -1,6 +1,10 @@
 package me.nullchips.bukkitplace;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.UUID;
 
 /**
  * Copyright (c) NullChips 2017. All rights reserved.
@@ -27,6 +31,24 @@ public class BukkitPlace extends JavaPlugin {
 
     public static JavaPlugin getInstance() {
         return instance;
+    }
+
+    public static Player getPlayerFromUUID(UUID uuid) {
+        for(Player p : Bukkit.getServer().getOnlinePlayers()) {
+            if(p.getUniqueId().equals(uuid)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    public static Player getPlayerFromUUID(String uuid) {
+        for(Player p : Bukkit.getServer().getOnlinePlayers()) {
+            if(p.getUniqueId().toString().equals(uuid)) {
+                return p;
+            }
+        }
+        return null;
     }
 
 }
