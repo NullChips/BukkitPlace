@@ -5,3 +5,8 @@ main: me.nullchips.bukkitplace.BukkitPlace
 load: POSTWORLD
 
 commands:
+
+permissions:
+  place.ignorecooldown:
+    default: op
+    description: Ignore the cooldown between placing pixels.

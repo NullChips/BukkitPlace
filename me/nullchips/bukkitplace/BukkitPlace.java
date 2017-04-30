@@ -1,5 +1,6 @@
 package me.nullchips.bukkitplace;
 
+import me.nullchips.bukkitplace.utils.SettingsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -19,9 +20,15 @@ public class BukkitPlace extends JavaPlugin {
 
     private static JavaPlugin instance;
 
+    private SettingsManager sm;
+
     @Override
     public void onEnable() {
         instance = this;
+
+        sm = SettingsManager.getInstance();
+
+        sm.saveConfig();
     }
 
     @Override
@@ -49,6 +56,10 @@ public class BukkitPlace extends JavaPlugin {
             }
         }
         return null;
+    }
+
+    public static void giveStartingItems(Player p) {
+        //TODO Give starting items.
     }
 
 }
