@@ -1,5 +1,6 @@
 package me.nullchips.bukkitplace.listeners;
 
+import me.nullchips.bukkitplace.BukkitPlace;
 import me.nullchips.bukkitplace.utils.CooldownManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,11 +21,13 @@ public class PlayerQuit implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
-        if(cm.getToBeKicked().contains(e.getPlayer())) {
+        if (cm.getToBeKicked().contains(e.getPlayer())) {
             cm.getToBeKicked().remove(e.getPlayer().getUniqueId());
 
             cm.addOfflineCooldownPlayer(e.getPlayer().getUniqueId());
+
+            BukkitPlace.getPlayerColours().remove(e.getPlayer().getUniqueId());
         }
     }
-
 }
+
