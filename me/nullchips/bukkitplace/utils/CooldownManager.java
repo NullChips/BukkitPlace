@@ -41,6 +41,8 @@ public class CooldownManager {
         return toBeKicked;
     }
 
+    SettingsManager sm = SettingsManager.getInstance();
+
     public void addToCooldown(Player p) {
         if (!p.hasPermission("place.ignorecooldown")) {
             p.sendMessage("You have been added to the cooldown. You will be kicked in 10 seconds and will not be able to join back until your cooldown is over.");
@@ -68,7 +70,7 @@ public class CooldownManager {
             public void run() {
                 cooldownPlayers.remove(uuid);
             }
-        }, 100);
+        }, sm.getCooldownTime());
         //TODO Change cooldown time via config.
     }
 

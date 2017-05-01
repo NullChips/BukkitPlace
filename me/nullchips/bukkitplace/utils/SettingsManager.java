@@ -7,6 +7,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
  * Copyright (c) NullChips 2017. All rights reserved.
@@ -80,8 +81,23 @@ public class SettingsManager {
         return false;
     }
 
+    //Settings
+    private long cooldownTime;
+
     public void loadSettings() {
 
+        final Logger logger = Bukkit.getServer().getLogger();
+
+        if(containsInt("cooldown-time")) {
+            cooldownTime = config.getInt("cooldown-time") *20;
+        } else {
+            logger.info("The default cooldown time could not be found. Setting to default cooldown time of 5 minutes.");
+            cooldownTime = 6000;
+        }
+    }
+
+    public long getCooldownTime() {
+        return cooldownTime;
     }
 
 }
