@@ -83,21 +83,34 @@ public class SettingsManager {
 
     //Settings
     private long cooldownTime;
+    private int canvasRadius;
 
     public void loadSettings() {
 
         final Logger logger = Bukkit.getServer().getLogger();
 
         if(containsInt("cooldown-time")) {
-            cooldownTime = config.getInt("cooldown-time") *20;
+            cooldownTime = (long) config.getInt("cooldown-time") *20;
         } else {
-            logger.info("The default cooldown time could not be found. Setting to default cooldown time of 5 minutes.");
+            logger.info("The cooldown time could not be found in config.yml. Setting to default cooldown time of 5 minutes.");
             cooldownTime = 6000;
         }
+
+        if(containsInt("canvas-radius")) {
+            canvasRadius = config.getInt("canvas-radius");
+        } else {
+            logger.info("The canvas radius cannot be found in config.yml. Setting to default radius of 250.");
+            canvasRadius = 250;
+        }
+
     }
 
     public long getCooldownTime() {
         return cooldownTime;
+    }
+
+    public int getCanvasRadius() {
+        return canvasRadius;
     }
 
 }

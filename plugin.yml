@@ -5,8 +5,15 @@ main: me.nullchips.bukkitplace.BukkitPlace
 load: POSTWORLD
 
 commands:
+  createplaceworld:
+    description: Create the canvas world.
+  join:
+    description: Join the canvas world.
 
 permissions:
   place.ignorecooldown:
     default: op
     description: Ignore the cooldown between placing pixels.
+  place.createworld:
+    default: op
+    description: Create the canvas world.
