@@ -1,7 +1,7 @@
 package me.nullchips.bukkitplace.utils;
 
 import me.nullchips.bukkitplace.BukkitPlace;
-import org.bukkit.Bukkit;
+import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
@@ -75,34 +75,82 @@ public class SettingsManager {
     }
 
     private boolean containsBoolean(String path) {
-        if(config.contains(path) && config.get(path) instanceof Boolean) {
+        if (config.contains(path) && config.get(path) instanceof Boolean) {
             return true;
         }
         return false;
     }
 
+    private boolean containsLocation(String path) {
+        if (containsDouble(path + ".x") && containsDouble(path + ".y") && containsDouble(path + ".z") &&
+                containsString(path + ".world") && containsDouble(path + ".yaw") && containsDouble(path + ".pitch")) {
+            return true;
+        }
+        return false;
+    }
+
+    private Location getLocation(String path, World world) {
+        FileConfiguration config = getConfig();
+
+        double x, y, z, yaw, pitch;
+        float yawF, pitchF;
+
+        x = config.getDouble(path + ".x");
+        y = config.getDouble(path + ".y");
+        z = config.getDouble(path + ".z");
+        yaw = config.getDouble(path + ".yaw");
+        pitch = config.getDouble(path + ".pitch");
+
+        yawF = (float) yaw;
+        pitchF = (float) pitch;
+
+        Location l = new Location(world, x, y, z, yawF, pitchF);
+
+        return l;
+    }
+
     //Settings
     private long cooldownTime;
     private int canvasRadius;
+    private Location hubLocation;
 
     public void loadSettings() {
 
         final Logger logger = Bukkit.getServer().getLogger();
 
-        if(containsInt("cooldown-time")) {
-            cooldownTime = (long) config.getInt("cooldown-time") *20;
+        //Cooldown time.
+        if (containsInt("cooldown-time")) {
+            cooldownTime = (long) config.getInt("cooldown-time") * 20;
         } else {
             logger.info("The cooldown time could not be found in config.yml. Setting to default cooldown time of 5 minutes.");
             cooldownTime = 6000;
         }
 
-        if(containsInt("canvas-radius")) {
+        //Canvas radius.
+        if (containsInt("canvas-radius")) {
             canvasRadius = config.getInt("canvas-radius");
         } else {
             logger.info("The canvas radius cannot be found in config.yml. Setting to default radius of 250.");
             canvasRadius = 250;
         }
 
+        //Hub location.
+        if (containsLocation("hub-location")) {
+            String hubWorldString = config.getString("hub-location.world");
+
+            World hubWorld;
+            File worldFiles = new File(hubWorldString + "/level.dat");
+            if (worldFiles.exists()) {
+                hubWorld = Bukkit.getServer().createWorld(new WorldCreator("BukkitPlaceWorld"));
+                hubLocation = getLocation("hub-location", hubWorld);
+            } else {
+                Bukkit.getServer().getLogger().info(ChatColor.RED + "The hub world location could not be found in the config.yml!");
+                hubLocation = null;
+            }
+        } else {
+            Bukkit.getServer().getLogger().info(ChatColor.RED + "The hub world location could not be found in the config.yml!");
+            hubLocation = null;
+        }
     }
 
     public long getCooldownTime() {
@@ -111,6 +159,14 @@ public class SettingsManager {
 
     public int getCanvasRadius() {
         return canvasRadius;
+    }
+
+    public Location getHubLocation() {
+        return hubLocation;
+    }
+
+    public void setHubLocation(Location hubLocation) {
+        this.hubLocation = hubLocation;
     }
 
 }

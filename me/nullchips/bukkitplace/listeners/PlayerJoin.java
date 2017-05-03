@@ -2,6 +2,7 @@ package me.nullchips.bukkitplace.listeners;
 
 import me.nullchips.bukkitplace.BukkitPlace;
 import me.nullchips.bukkitplace.utils.CooldownManager;
+import me.nullchips.bukkitplace.utils.SettingsManager;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,6 +20,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 public class PlayerJoin implements Listener {
 
     CooldownManager cm = CooldownManager.getInstance();
+    SettingsManager sm = SettingsManager.getInstance();
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
@@ -27,8 +29,14 @@ public class PlayerJoin implements Listener {
             return;
         }
 
+        if(sm.getHubLocation() == null) {
+            e.getPlayer().sendMessage(ChatColor.RED + "The hub spawn has not yet been set! Use /sethubspawn to set the hub spawn.");
+        } else {
+            e.getPlayer().teleport(sm.getHubLocation());
+        }
+
+        BukkitPlace.clearInventory(e.getPlayer());
         e.setJoinMessage("");
-        BukkitPlace.giveStartingItems(e.getPlayer());
     }
 
 }

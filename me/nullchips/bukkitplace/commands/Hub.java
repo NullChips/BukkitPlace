@@ -2,9 +2,8 @@ package me.nullchips.bukkitplace.commands;
 
 import me.nullchips.bukkitplace.BukkitPlace;
 import me.nullchips.bukkitplace.utils.ChatUtils;
-import org.bukkit.Bukkit;
+import me.nullchips.bukkitplace.utils.SettingsManager;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,23 +18,25 @@ import org.bukkit.entity.Player;
  * you, the third party.
  * Thanks.
  */
-public class Join implements CommandExecutor {
+public class Hub implements CommandExecutor {
 
     ChatUtils cu = ChatUtils.getInstance();
+    SettingsManager sm = SettingsManager.getInstance();
 
-    @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         Player p = cu.commandCheck(sender);
 
         if (p != null) {
-            if(BukkitPlace.getPlaceWorld() == null) {
-                p.sendMessage(ChatColor.RED + "The canvas has not yet been loaded!");
+            if (sm.getHubLocation() == null) {
+                p.sendMessage(ChatColor.RED + "The hub spawn has not yet been set! Use /sethubspawn to set the hub spawn.");
                 return true;
             }
-            p.teleport(new Location(Bukkit.getServer().getWorld("BukkitPlaceWorld"), 0, 2, 0));
-            BukkitPlace.giveStartingItems(p);
+
+            p.teleport(sm.getHubLocation());
+            BukkitPlace.clearInventory(p);
         }
 
         return true;
     }
+
 }

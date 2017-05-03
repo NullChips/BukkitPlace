@@ -33,12 +33,10 @@ public class CreatePlaceWorld implements CommandExecutor {
             p.sendMessage(ChatColor.GREEN + "Creating canvas world. This will override and clear any previous canvas worlds you had.");
             p.sendMessage(ChatColor.RED + "This can take some time, expect some lag.");
 
-            for(Player target : Bukkit.getServer().getOnlinePlayers()) {
-                if(target.getWorld().getName().equalsIgnoreCase("BukkitPlaceWorld")) {
-
-                    //TODO Kick player to lobby.
-
+            for (Player target : Bukkit.getServer().getOnlinePlayers()) {
+                if (target.getWorld().getName().equalsIgnoreCase("BukkitPlaceWorld")) {
                     target.sendMessage("The BukkitPlace canvas is being refreshed. You have been kicked to the lobby.");
+                    target.teleport(sm.getHubLocation());
                 }
             }
 
@@ -46,7 +44,7 @@ public class CreatePlaceWorld implements CommandExecutor {
 
             File worldFiles = new File("BukkitPlaceWorld/");
 
-            if(worldFiles.exists()) {
+            if (worldFiles.exists()) {
                 Bukkit.getLogger().info("BukkitPlaceWorld folder is being deleted.");
                 worldFiles.delete();
             }
@@ -55,8 +53,8 @@ public class CreatePlaceWorld implements CommandExecutor {
 
             int radius = sm.getCanvasRadius();
 
-            for(int x = -radius; x <= radius; x++) {
-                for(int z = -radius; z <= radius; z++) {
+            for (int x = -radius; x <= radius; x++) {
+                for (int z = -radius; z <= radius; z++) {
                     world.getBlockAt(x, 0, z).setType(Material.WOOL);
                 }
             }

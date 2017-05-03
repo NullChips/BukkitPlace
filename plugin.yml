@@ -9,6 +9,10 @@ commands:
     description: Create the canvas world.
   join:
     description: Join the canvas world.
+  sethubspawn:
+    description: Set the spawn for the hub.
+  hub:
+    description: Leave the canvas and go to the hub.
 
 permissions:
   place.ignorecooldown:
@@ -17,3 +21,6 @@ permissions:
   place.createworld:
     default: op
     description: Create the canvas world.
+  place.setspawn:
+    default: op
+    description: Set the hub for the spawn.

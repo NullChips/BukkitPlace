@@ -1,7 +1,9 @@
 package me.nullchips.bukkitplace;
 
 import me.nullchips.bukkitplace.commands.CreatePlaceWorld;
+import me.nullchips.bukkitplace.commands.Hub;
 import me.nullchips.bukkitplace.commands.Join;
+import me.nullchips.bukkitplace.commands.SetHubSpawn;
 import me.nullchips.bukkitplace.listeners.*;
 import me.nullchips.bukkitplace.utils.PlaceWorldGenerator;
 import me.nullchips.bukkitplace.utils.SettingsManager;
@@ -64,6 +66,8 @@ public class BukkitPlace extends JavaPlugin {
         //TODO Register Commands.
         getCommand("createplaceworld").setExecutor(new CreatePlaceWorld());
         getCommand("join").setExecutor(new Join());
+        getCommand("sethubspawn").setExecutor(new SetHubSpawn());
+        getCommand("hub").setExecutor(new Hub());
 
         //TODO Find out why NPE is happening when trying to join BukkitPlaceWorld.
 
@@ -149,6 +153,14 @@ public class BukkitPlace extends JavaPlugin {
         p.getInventory().setLeggings(colourLeggings);
         p.getInventory().setBoots(colourBoots);
 
+    }
+
+    public static void clearInventory(Player p) {
+        p.getInventory().clear();
+        p.getInventory().setHelmet(null);
+        p.getInventory().setChestplate(null);
+        p.getInventory().setLeggings(null);
+        p.getInventory().setBoots(null);
     }
 
 }
