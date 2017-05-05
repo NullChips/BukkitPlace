@@ -2,6 +2,7 @@ package me.nullchips.bukkitplace.listeners;
 
 import me.nullchips.bukkitplace.BukkitPlace;
 import me.nullchips.bukkitplace.DrawingColour;
+import me.nullchips.bukkitplace.events.PlayerPlacePixelEvent;
 import me.nullchips.bukkitplace.utils.CooldownManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -48,6 +49,7 @@ public class PlayerInteract implements Listener {
 
                 DrawingColour dc = BukkitPlace.getPlayerColours().get(e.getPlayer().getUniqueId());
 
+                Bukkit.getServer().getPluginManager().callEvent(new PlayerPlacePixelEvent(e.getPlayer()));
                 target.setData(dc.getDyeData());
                 cm.addToCooldown(e.getPlayer());
 
