@@ -46,7 +46,6 @@ public class CooldownManager {
 
     public void addToCooldown(Player p) {
         if (!p.hasPermission("place.ignorecooldown")) {
-            Bukkit.getServer().broadcastMessage("[DEBUG] Player has tried to place a pixel.");
             cu.message(p, "You have been added to the cooldown. You will be kicked in 10 seconds and will not be able to join back until your cooldown is over.");
 
             toBeKicked.add(p.getUniqueId());
