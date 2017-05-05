@@ -72,7 +72,6 @@ public class CooldownManager {
                 cooldownPlayers.remove(uuid);
             }
         }, sm.getCooldownTime());
-        //TODO Change cooldown time via config.
     }
 
 }

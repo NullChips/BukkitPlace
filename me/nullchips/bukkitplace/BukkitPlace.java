@@ -68,13 +68,11 @@ public class BukkitPlace extends JavaPlugin {
         registerEvents(this, new BlockPlace());
         registerEvents(this, new BlockBreak());
 
-        //TODO Register Commands.
+        //Register Commands.
         getCommand("createplaceworld").setExecutor(new CreatePlaceWorld());
         getCommand("join").setExecutor(new Join());
         getCommand("sethubspawn").setExecutor(new SetHubSpawn());
         getCommand("hub").setExecutor(new Hub());
-
-        //TODO Find out why NPE is happening when trying to join BukkitPlaceWorld.
 
         sm.setup(this);
 
@@ -172,9 +170,6 @@ public class BukkitPlace extends JavaPlugin {
         p.getInventory().setChestplate(colourChestplate);
         p.getInventory().setLeggings(colourLeggings);
         p.getInventory().setBoots(colourBoots);
-
-        //TODO Settings menu?
-
     }
 
     public static void clearInventory(Player p) {

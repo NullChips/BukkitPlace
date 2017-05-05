@@ -75,8 +75,6 @@ public class PlayerInteract implements Listener {
             }
 
         }
-
-        //TODO Settings menu, pixel brush and stuff.
     }
 
 }
