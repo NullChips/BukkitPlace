@@ -65,6 +65,8 @@ public class BukkitPlace extends JavaPlugin {
         registerEvents(this, new PlayerQuit());
         registerEvents(this, new CreatureSpawn());
         registerEvents(this, new PlayerInteract());
+        registerEvents(this, new BlockPlace());
+        registerEvents(this, new BlockBreak());
 
         //TODO Register Commands.
         getCommand("createplaceworld").setExecutor(new CreatePlaceWorld());

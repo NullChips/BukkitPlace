@@ -42,17 +42,19 @@ public class CooldownManager {
     }
 
     SettingsManager sm = SettingsManager.getInstance();
+    ChatUtils cu = ChatUtils.getInstance();
 
     public void addToCooldown(Player p) {
         if (!p.hasPermission("place.ignorecooldown")) {
-            p.sendMessage("You have been added to the cooldown. You will be kicked in 10 seconds and will not be able to join back until your cooldown is over.");
+            Bukkit.getServer().broadcastMessage("[DEBUG] Player has tried to place a pixel.");
+            cu.message(p, "You have been added to the cooldown. You will be kicked in 10 seconds and will not be able to join back until your cooldown is over.");
 
             toBeKicked.add(p.getUniqueId());
 
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(BukkitPlace.getInstance(), new Runnable() {
                 @Override
                 public void run() {
-                    if(cooldownPlayers.contains(p.getUniqueId())) {
+                    if (toBeKicked.contains(p.getUniqueId())) {
                         p.kickPlayer(ChatColor.RED + "You have placed a pixel! You will be able to join back once the cooldown is over.");
                         toBeKicked.remove(p.getUniqueId());
 

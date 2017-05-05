@@ -18,7 +18,7 @@ import org.bukkit.event.player.PlayerChatTabCompleteEvent;
 public class ChatUtils {
 
     private ChatUtils() {
-
+        this.starter = ChatColor.GOLD + "Bukkit" + ChatColor.RED + "Place " + ChatColor.GRAY + ">> ";
     }
 
     private static ChatUtils instance;

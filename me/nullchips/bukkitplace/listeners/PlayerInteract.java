@@ -1,9 +1,12 @@
 package me.nullchips.bukkitplace.listeners;
 
+import me.nullchips.bukkitplace.BukkitPlace;
 import me.nullchips.bukkitplace.DrawingColour;
+import me.nullchips.bukkitplace.utils.CooldownManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -11,6 +14,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.Set;
 
 /**
  * Copyright (c) NullChips 2017. All rights reserved.
@@ -23,15 +28,29 @@ import org.bukkit.inventory.meta.ItemMeta;
  */
 public class PlayerInteract implements Listener {
 
+    CooldownManager cm = CooldownManager.getInstance();
+
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
 
         if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             ItemStack handItem = e.getPlayer().getItemInHand();
 
-            if(ChatColor.stripColor(handItem.getItemMeta().getDisplayName()).equalsIgnoreCase("pixel brush")) {
-                e.getPlayer().sendMessage("[DEBUG] You have used the pixel brush.");
-                //TODO Draw pixel.
+            if(ChatColor.stripColor(handItem.getItemMeta().getDisplayName()).equalsIgnoreCase("pixel brush") &&
+                    !cm.getToBeKicked().contains(e.getPlayer().getUniqueId()) &&
+                    !cm.getCooldownPlayers().contains(e.getPlayer().getUniqueId())) {
+
+                Block target = e.getPlayer().getTargetBlock((Set<Material>) null, 10);
+
+                if(target == null || target.getType() != Material.WOOL) {
+                    e.getPlayer().sendMessage(ChatColor.RED + "You are not currently looking at a wool block!");
+                }
+
+                DrawingColour dc = BukkitPlace.getPlayerColours().get(e.getPlayer().getUniqueId());
+
+                target.setData(dc.getDyeData());
+                cm.addToCooldown(e.getPlayer());
+
                 return;
             }
 

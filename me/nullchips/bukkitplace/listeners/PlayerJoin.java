@@ -25,7 +25,7 @@ public class PlayerJoin implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
-        if(cm.getToBeKicked().contains(e.getPlayer().getUniqueId())) {
+        if(cm.getCooldownPlayers().contains(e.getPlayer().getUniqueId())) {
             e.getPlayer().kickPlayer(ChatColor.RED + "Your cooldown has not yet ended. Please try again later!");
             return;
         }

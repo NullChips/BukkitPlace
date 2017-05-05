@@ -16,7 +16,7 @@ commands:
 
 permissions:
   place.ignorecooldown:
-    default: op
+    default: false
     description: Ignore the cooldown between placing pixels.
   place.createworld:
     default: op
