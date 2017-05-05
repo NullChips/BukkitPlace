@@ -5,14 +5,15 @@ import me.nullchips.bukkitplace.commands.Hub;
 import me.nullchips.bukkitplace.commands.Join;
 import me.nullchips.bukkitplace.commands.SetHubSpawn;
 import me.nullchips.bukkitplace.listeners.*;
+import me.nullchips.bukkitplace.threads.SetTimeRunnable;
 import me.nullchips.bukkitplace.utils.PlaceWorldGenerator;
 import me.nullchips.bukkitplace.utils.SettingsManager;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -62,6 +63,8 @@ public class BukkitPlace extends JavaPlugin {
         registerEvents(this, new PlayerDropItem());
         registerEvents(this, new PlayerJoin());
         registerEvents(this, new PlayerQuit());
+        registerEvents(this, new CreatureSpawn());
+        registerEvents(this, new PlayerInteract());
 
         //TODO Register Commands.
         getCommand("createplaceworld").setExecutor(new CreatePlaceWorld());
@@ -72,6 +75,8 @@ public class BukkitPlace extends JavaPlugin {
         //TODO Find out why NPE is happening when trying to join BukkitPlaceWorld.
 
         sm.setup(this);
+
+        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new SetTimeRunnable(), 10L, 10L);
     }
 
     @Override
@@ -116,11 +121,9 @@ public class BukkitPlace extends JavaPlugin {
     }
 
     public static void giveStartingItems(Player p) {
-        playerColours.put(p.getUniqueId(), DrawingColour.BLACK);
-
         ItemStack brush = new ItemStack(Material.IRON_SWORD);
         ItemMeta brushMeta = brush.getItemMeta();
-        brushMeta.setDisplayName(ChatColor.GREEN + "Pixel Brush");
+        brushMeta.setDisplayName(ChatColor.GREEN + "" + ChatColor.BOLD + "Pixel Brush");
         ArrayList<String> brushLore = new ArrayList<>();
         brushLore.add(ChatColor.RED + "Right click to place a pixel!");
         brushLore.add("Current colour: " + playerColours.get(p.getUniqueId()).getChatColor() + playerColours.get(p.getUniqueId()).getDisplayName());
@@ -139,10 +142,25 @@ public class BukkitPlace extends JavaPlugin {
         currentColourMeta.setDisplayName(playerColours.get(p.getUniqueId()).getChatColor() + "Current Color");
         currentColour.setItemMeta(currentColourMeta);
 
-        ItemStack colourHelmet = new ItemStack(Material.LEATHER_HELMET, 1, playerColours.get(p.getUniqueId()).getDyeData());
-        ItemStack colourChestplate = new ItemStack(Material.LEATHER_CHESTPLATE, 1, playerColours.get(p.getUniqueId()).getDyeData());
-        ItemStack colourLeggings = new ItemStack(Material.LEATHER_LEGGINGS, 1, playerColours.get(p.getUniqueId()).getDyeData());
-        ItemStack colourBoots = new ItemStack(Material.LEATHER_BOOTS, 1, playerColours.get(p.getUniqueId()).getDyeData());
+        ItemStack colourHelmet = new ItemStack(Material.LEATHER_HELMET);
+        ItemStack colourChestplate = new ItemStack(Material.LEATHER_CHESTPLATE);
+        ItemStack colourLeggings = new ItemStack(Material.LEATHER_LEGGINGS);
+        ItemStack colourBoots = new ItemStack(Material.LEATHER_BOOTS);
+
+        LeatherArmorMeta colourHelmetMeta = (LeatherArmorMeta) colourHelmet.getItemMeta();
+        LeatherArmorMeta colourChestplateMeta = (LeatherArmorMeta) colourChestplate.getItemMeta();
+        LeatherArmorMeta colourLeggingsMeta = (LeatherArmorMeta) colourLeggings.getItemMeta();
+        LeatherArmorMeta colourBootsMeta = (LeatherArmorMeta) colourBoots.getItemMeta();
+
+        colourHelmetMeta.setColor(playerColours.get(p.getUniqueId()).getArmourColour());
+        colourChestplateMeta.setColor(playerColours.get(p.getUniqueId()).getArmourColour());
+        colourLeggingsMeta.setColor(playerColours.get(p.getUniqueId()).getArmourColour());
+        colourBootsMeta.setColor(playerColours.get(p.getUniqueId()).getArmourColour());
+
+        colourHelmet.setItemMeta(colourHelmetMeta);
+        colourChestplate.setItemMeta(colourChestplateMeta);
+        colourLeggings.setItemMeta(colourLeggingsMeta);
+        colourBoots.setItemMeta(colourBootsMeta);
 
         p.getInventory().setItem(0, brush);
         p.getInventory().setItem(4, currentColour);
@@ -153,14 +171,15 @@ public class BukkitPlace extends JavaPlugin {
         p.getInventory().setLeggings(colourLeggings);
         p.getInventory().setBoots(colourBoots);
 
+        //TODO Settings menu?
+
     }
 
     public static void clearInventory(Player p) {
         p.getInventory().clear();
-        p.getInventory().setHelmet(null);
-        p.getInventory().setChestplate(null);
-        p.getInventory().setLeggings(null);
-        p.getInventory().setBoots(null);
+        p.getInventory().setHelmet(new ItemStack(Material.AIR));
+        p.getInventory().setChestplate(new ItemStack(Material.AIR));
+        p.getInventory().setLeggings(new ItemStack(Material.AIR));
+        p.getInventory().setBoots(new ItemStack(Material.AIR));
     }
-
 }

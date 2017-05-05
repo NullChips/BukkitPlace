@@ -141,7 +141,7 @@ public class SettingsManager {
             World hubWorld;
             File worldFiles = new File(hubWorldString + "/level.dat");
             if (worldFiles.exists()) {
-                hubWorld = Bukkit.getServer().createWorld(new WorldCreator("BukkitPlaceWorld"));
+                hubWorld = Bukkit.getServer().getWorld(hubWorldString);
                 hubLocation = getLocation("hub-location", hubWorld);
             } else {
                 Bukkit.getServer().getLogger().info(ChatColor.RED + "The hub world location could not be found in the config.yml!");
