@@ -7,6 +7,7 @@ import me.nullchips.bukkitplace.commands.SetHubSpawn;
 import me.nullchips.bukkitplace.listeners.*;
 import me.nullchips.bukkitplace.threads.SetTimeRunnable;
 import me.nullchips.bukkitplace.utils.PlaceWorldGenerator;
+import me.nullchips.bukkitplace.utils.PlayerSettings;
 import me.nullchips.bukkitplace.utils.SettingsManager;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -15,9 +16,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -37,6 +40,8 @@ public class BukkitPlace extends JavaPlugin {
     private SettingsManager sm;
 
     private static ConcurrentHashMap<UUID, DrawingColour> playerColours;
+    private static ArrayList<PlayerSettings> playerSettings;
+    private static ArrayList<UUID> settingsCooldown;
     private static World placeWorld;
 
     @Override
@@ -46,6 +51,8 @@ public class BukkitPlace extends JavaPlugin {
         sm = SettingsManager.getInstance();
 
         playerColours = new ConcurrentHashMap<>();
+        playerSettings = new ArrayList<>();
+        settingsCooldown = new ArrayList<>();
 
         File worldFiles = new File("BukkitPlaceWorld/level.dat");
         if (worldFiles.exists()) {
@@ -67,6 +74,7 @@ public class BukkitPlace extends JavaPlugin {
         registerEvents(this, new PlayerInteract());
         registerEvents(this, new BlockPlace());
         registerEvents(this, new BlockBreak());
+        //TODO Chat formatting, players who have chat turned off.
 
         //Register Commands.
         getCommand("createplaceworld").setExecutor(new CreatePlaceWorld());
@@ -90,6 +98,32 @@ public class BukkitPlace extends JavaPlugin {
 
     public static ConcurrentHashMap<UUID, DrawingColour> getPlayerColours() {
         return playerColours;
+    }
+
+    public static ArrayList<PlayerSettings> getPlayerSettings() {
+        return playerSettings;
+    }
+
+    public static ArrayList<UUID> getSettingsCooldown() {
+        return settingsCooldown;
+    }
+
+    public static PlayerSettings getPlayerSettings(UUID uuid) {
+        for (PlayerSettings ps : playerSettings) {
+            if (ps.getPlayerUUID().equals(uuid)) {
+                return ps;
+            }
+        }
+        return null;
+    }
+
+    public static PlayerSettings getPlayerSettings(Player p) {
+        for (PlayerSettings ps : playerSettings) {
+            if (ps.getPlayerUUID().equals(p.getUniqueId())) {
+                return ps;
+            }
+        }
+        return null;
     }
 
     public static World getPlaceWorld() {
@@ -142,6 +176,11 @@ public class BukkitPlace extends JavaPlugin {
         currentColourMeta.setDisplayName(playerColours.get(p.getUniqueId()).getChatColor() + "Current Color");
         currentColour.setItemMeta(currentColourMeta);
 
+        ItemStack settings = new ItemStack(Material.COMPASS);
+        ItemMeta settingsMeta = settings.getItemMeta();
+        settingsMeta.setDisplayName(ChatColor.RED + "Settings");
+        settings.setItemMeta(settingsMeta);
+
         ItemStack colourHelmet = new ItemStack(Material.LEATHER_HELMET);
         ItemStack colourChestplate = new ItemStack(Material.LEATHER_CHESTPLATE);
         ItemStack colourLeggings = new ItemStack(Material.LEATHER_LEGGINGS);
@@ -165,6 +204,7 @@ public class BukkitPlace extends JavaPlugin {
         p.getInventory().setItem(0, brush);
         p.getInventory().setItem(4, currentColour);
         p.getInventory().setItem(8, colourSelector);
+        p.getInventory().setItem(7, settings);
 
         p.getInventory().setHelmet(colourHelmet);
         p.getInventory().setChestplate(colourChestplate);
@@ -179,4 +219,17 @@ public class BukkitPlace extends JavaPlugin {
         p.getInventory().setLeggings(new ItemStack(Material.AIR));
         p.getInventory().setBoots(new ItemStack(Material.AIR));
     }
+
+    public static void addToSettingsCooldown(Player p) {
+        final UUID uuid = p.getUniqueId();
+        settingsCooldown.add(uuid);
+
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(BukkitPlace.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                settingsCooldown.remove(uuid);
+            }
+        }, 50L);
+    }
+
 }

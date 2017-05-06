@@ -27,6 +27,7 @@ public class PlayerQuit implements Listener {
             cm.addOfflineCooldownPlayer(e.getPlayer().getUniqueId());
 
             BukkitPlace.getPlayerColours().remove(e.getPlayer().getUniqueId());
+            BukkitPlace.getPlayerSettings().remove(BukkitPlace.getPlayerSettings(e.getPlayer()));
         }
     }
 }

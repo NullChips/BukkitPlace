@@ -3,6 +3,7 @@ package me.nullchips.bukkitplace.listeners;
 import me.nullchips.bukkitplace.BukkitPlace;
 import me.nullchips.bukkitplace.DrawingColour;
 import me.nullchips.bukkitplace.utils.CooldownManager;
+import me.nullchips.bukkitplace.utils.PlayerSettings;
 import me.nullchips.bukkitplace.utils.SettingsManager;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
@@ -37,6 +38,7 @@ public class PlayerJoin implements Listener {
         }
 
         BukkitPlace.getPlayerColours().put(e.getPlayer().getUniqueId(), DrawingColour.BLACK);
+        BukkitPlace.getPlayerSettings().add(new PlayerSettings(e.getPlayer().getUniqueId()));
         BukkitPlace.clearInventory(e.getPlayer());
         e.setJoinMessage("");
     }

@@ -35,7 +35,7 @@ public enum DrawingColour {
     BROWN("Brown", ChatColor.GOLD, DyeColor.LIGHT_BLUE.getDyeData(), Color.MAROON),
     GREEN("Green", ChatColor.DARK_GREEN, DyeColor.MAGENTA.getDyeData(), Color.GREEN),
     RED("Red", ChatColor.RED, DyeColor.ORANGE.getDyeData(), Color.RED),
-    BLACK("Black", ChatColor.BLACK, DyeColor.WHITE.getDyeData(), Color.BLACK);
+    BLACK("Black", ChatColor.DARK_GRAY, DyeColor.WHITE.getDyeData(), Color.BLACK);
 
     private String displayName;
     private ChatColor chatColor;
